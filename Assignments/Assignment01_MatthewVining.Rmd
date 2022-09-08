@@ -1,0 +1,27 @@
+---
+title: "Assignment01"
+author: "Matthew Vining"
+date: "2022-09-08"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### My Git settings:
+user.name=mvining0
+user.email=matthew.vining@duke.edu
+
+### My Git remote settings:
+origin  https://github.com/mvining0/EDA-Fall2022 (fetch)
+origin  https://github.com/mvining0/EDA-Fall2022 (push)
+upstream        https://github.com/ENV872/EDA-Fall2022 (fetch)
+upstream        DISABLE (push)
+
+### My Git changes:
+91ef567 (HEAD -> main) Add New File Assignemnt 1
+898991f Add New GitDemo File
+2342d5a (upstream/main) Create 02_Reproducibility_CodingBasics.Rmd
+d74b397 Adds 01_gitExercise.pdf
+20a7b70 Add data files
