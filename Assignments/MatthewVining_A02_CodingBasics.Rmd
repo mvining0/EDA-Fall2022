@@ -60,27 +60,47 @@ mean_b > med_b
 
 ```{r}
 vector_names <- c("Matthew","Nef","Abby","Sitara") # student names character vector
-vector1_names
+vector_names
 vector_testscore <- c(98,80,95,88) # numeric vector of test scores
 vector_testscore
 vector_passed <- c(TRUE,TRUE,TRUE,TRUE) #logical vector if they passed test or not
 vector_passed
 
-test_dataframe <- data.frame(vector_names,vector_testscore,vector_passed) #create a data frame that combines each of the vectors described above
+test_dataframe <- data.frame(vector_names,vector_testscore,vector_passed) 
+test_dataframe
+#create a data frame that combines each of the vectors described above
+
+names(test_dataframe) <- c("Name","Test Score","Pass/Fail"); View(test_dataframe) # labeled columns of data
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer: Unlike a matrix where columns have to have the same data types, columns in a data frame can have different types of data like character vs numeric.
 
 10. Create a function with an if/else statement. Your function should take a **vector** of test scores and print (not return) whether a given test score is a passing grade of 50 or above (TRUE or FALSE). You will need to choose either the `if` and `else` statements or the `ifelse` statement. 
 
 11. Apply your function to the vector with test scores that you created in number 5.
 
 ```{r}
+pass_fail <- function(vector_testscore) {
+ ifelse(vector_testscore >= 50, "Pass", "Fail") #log_exp, if TRUE, if FALSE
+}
 
+pass_fail <- function(vector_testscore) {
+  if(vector_testscore >= 50) {
+    "Pass"
+  } 
+  else {
+    "Fail"
+  }
+}
+TestResultMatthew <- pass_fail(98); TestResultMatthew
+TestResultNef <- pass_fail(80); TestResultNef
+TestResultAbby <- pass_fail(95); TestResultAbby
+TestResultSitara <- pass_fail(88); TestResultSitara
+# running if else test to see who passes or not
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer:
+> Answer: ifelse worked the best because it was easier to write. However, both types worked and gave the same output.
