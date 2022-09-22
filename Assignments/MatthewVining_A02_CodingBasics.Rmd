@@ -1,6 +1,6 @@
 ---
 title: "Assignment 2: Coding Basics"
-author: "Student Name"
+author: "Matthew Vining"
 output: pdf_document
 geometry: margin=2.54cm
 editor_options: 
@@ -31,12 +31,21 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 4.  Insert comments in your code to describe what you are doing.
 
 ```{r}
-#1. 
+#1.
+basics_sequence <- seq(1, 100, 4) ### assigning bascis_sequence a array of number 1 through 100 and by increments of 4
 
 #2. 
+mean_b <- mean(basics_sequence) 
+mean_b
+# calculating and assigning the mean of the basics_sequence array
 
-#3. 
+med_b <- median(basics_sequence)
+med_b
+# calculating and assigning the median of the basics_sequence array
 
+#3.
+mean_b > med_b
+#setting the conditional statement that the mean of b is greater than the median of b to see if R returns a true or false statement
 ```
 
 ## Basics Day 2
@@ -50,7 +59,14 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 8.  Label the columns of your data frame with informative titles.
 
 ```{r}
+vector_names <- c("Matthew","Nef","Abby","Sitara") # student names character vector
+vector1_names
+vector_testscore <- c(98,80,95,88) # numeric vector of test scores
+vector_testscore
+vector_passed <- c(TRUE,TRUE,TRUE,TRUE) #logical vector if they passed test or not
+vector_passed
 
+test_dataframe <- data.frame(vector_names,vector_testscore,vector_passed) #create a data frame that combines each of the vectors described above
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
