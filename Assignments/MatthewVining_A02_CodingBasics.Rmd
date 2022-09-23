@@ -70,7 +70,7 @@ test_dataframe <- data.frame(vector_names,vector_testscore,vector_passed)
 test_dataframe
 #create a data frame that combines each of the vectors described above
 
-names(test_dataframe) <- c("Name","Test Score","Pass/Fail"); View(test_dataframe) # labeled columns of data
+names(test_dataframe) <- c("Name","Test Score","Pass(TRUE)/Fail(FALSE)"); View(test_dataframe) # labeled columns of data
 ```
 
 9.  QUESTION: How is this data frame different from a matrix?
@@ -103,4 +103,4 @@ TestResultSitara <- pass_fail(88); TestResultSitara
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: ifelse worked the best because it was easier to write. However, both types worked and gave the same output.
+> Answer: ifelse worked the best because it was easier to write. The if and else function required a more complex loop and code to create and I found it easier to run into issues than if I use the ifelse code langauge. However, both types worked and gave the same output.
