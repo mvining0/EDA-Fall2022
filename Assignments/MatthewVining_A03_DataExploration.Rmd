@@ -25,11 +25,12 @@ The completed exercise is due on Sept 30th.
 1.  Check your working directory, load necessary packages (tidyverse), and upload two datasets: the ECOTOX neonicotinoid dataset (ECOTOX_Neonicotinoids_Insects_raw.csv) and the Niwot Ridge NEON dataset for litter and woody debris (NEON_NIWO_Litter_massdata_2018-08_raw.csv). Name these datasets "Neonics" and "Litter", respectively. Be sure to include the subcommand to read strings in as factors.
 
 ```{r,  message = FALSE}
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 getwd()
 #install.packages(tidyverse)
 library(tidyverse)
-Neonics <- read.csv("./Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv", stringsAsFactors = TRUE)
-Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv", stringsAsFactors = TRUE)
+Neonics <- read.csv("../Data/Raw/ECOTOX_Neonicotinoids_Insects_raw.csv", stringsAsFactors = TRUE)
+Litter <- read.csv("../Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv", stringsAsFactors = TRUE)
 ```
 
 ## Learn about your system
@@ -68,36 +69,44 @@ summary(Neonics$Effect)
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.
 
 ```{r}
-
+summary(Neonics$Species.Common.Name)
 ```
 
-> Answer:
+> Answer:The six most common species are (not including other as a category) honey bee parasitic wasp, buff tailed bumblebee, carniolan honey bee, bumble bee, and italian honeybee. All of the most common specieis are species of bees. It is likely they are the most researched/studied because they are vulnerable species of insect that are needed to polliinate many plants, including agricultural crops. If neonicotinoids are meant to remove and kill insects, and bees are important to ecosystem funcitons, we care about studying them more to understand how to protect them from certain types of neonicotinoids.
 
 8.  Concentrations are always a numeric value. What is the class of Conc.1..Author. in the dataset, and why is it not numeric?
 
 ```{r}
-
+class(Neonics$Conc.1..Author.)
+summary(Neonics$Conc.1..Author.)
 ```
 
-> Answer:
+> Answer: The class of Conc.1..Author is a factor. Based off the naming structure and summary of the variable, it appears as a factor maybe because its a concentration range type that is assigned to different observations/individual measurements, rather than an actual measure of concentration that varies more widely. This would make it easier to group observations together depending on their concentration type.
 
 ## Explore your data graphically (Neonics)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
 ```{r}
-
+summary(Neonics$Publication.Year)
+ggplot(Neonics) +
+  geom_freqpoly(aes(x = Publication.Year, color = "darkgray"), bins = 38) +
+  scale_x_continuous(limits = c(1982, 2019)) +
+  theme(legend.position = "top")
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
 ```{r}
-
+ggplot(Neonics) +
+  geom_freqpoly(aes(x = Publication.Year, color = Test.Location), bins = 38) +
+  scale_x_continuous(limits = c(1982, 2019)) +
+  theme(legend.position = "top")
 ```
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer:
+> Answer:Overall it appears that the most common test location is in the lab over time. After that, the most common is in the natural field setting, with a high spike above lab settings in the 2007-2008 time period. As time has progressed for this sample, lab settings have become the most common.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information.
 

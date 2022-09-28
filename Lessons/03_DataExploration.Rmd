@@ -111,11 +111,6 @@ USGS.flow.data <- read.csv("./Data/Raw/USGS_Site02085000_Flow_Raw.csv", stringsA
 
 ```
 
-```{r}
-<- 
-```
-
-
 ## EXPLORE YOUR DATASET
 
 Take a moment to read through the README file associated with the USGS dataset on discharge at the Eno River. Where can you find this file? How does the placement and information found in this file relate to the best practices for reproducible data analysis?
