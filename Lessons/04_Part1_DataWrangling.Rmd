@@ -23,9 +23,9 @@ Opening discussion: why might we be interested in long-term observations of temp
 
 ```{r, message = FALSE}
 getwd()
-#install.packages(tidyverse)
+install.packages(tidyverse)
 library(tidyverse)
-#install.packages(lubridate)
+install.packages(lubridate)
 library(lubridate)
 NTL.phys.data <- read.csv("./Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv", stringsAsFactors = TRUE)
 
