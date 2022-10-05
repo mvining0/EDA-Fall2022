@@ -79,6 +79,8 @@ Here are some commonly used aesthetic types that can be manipulated in ggplot:
 * size
 * transparency
 
+ggsave to save plot
+
 ### Plotting continuous variables over time: Scatterplot and Line Plot
 
 ```{r, fig.height = 3, fig.width = 4, warning = FALSE}
