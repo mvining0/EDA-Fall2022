@@ -74,7 +74,7 @@ dim(PM25.2019)
 #3-6
 # Ozone.2018
 class(Ozone.2018$Date)
-Ozone.2018$Date <- as.Date(Ozone.2018$Date, format = "%Y-%m-%d")
+Ozone.2018$Date <- as.Date(Ozone.2018$Date, format = "%Y/%m/%d")
 class(Ozone.2018$Date)
 
 Ozone.2018.processed <- 
@@ -86,7 +86,7 @@ Ozone.2018.processed <-
   
 #Ozone.2019
 class(Ozone.2019$Date)
-Ozone.2019$Date <- as.Date(Ozone.2019$Date, format = "%Y-%m-%d")
+#Ozone.2019$Date <- as.Date(Ozone.2019$Date, format = "%Y/%m/%d")
 class(Ozone.2019$Date)
 
 Ozone.2019.processed <- 
@@ -98,7 +98,7 @@ Ozone.2019.processed <-
 
 #PM2.5.2018
 class(PM25.2018$Date)
-PM25.2018$Date <- as.Date(PM25.2018$Date, format = "%Y-%m-%d")
+#PM25.2018$Date <- as.Date(PM25.2018$Date, format = "%Y/%m/%d")
 class(PM25.2018$Date)
 
 PM25.2018.processed <- 
@@ -112,7 +112,7 @@ write.csv(PM25.2018.processed, row.names = FALSE,
 
 #PM2.5.2019
 class(PM25.2019$Date)
-PM25.2019$Date <- as.Date(PM25.2019$Date, format = "%Y-%m-%d")
+#PM25.2019$Date <- as.Date(PM25.2019$Date, format = "%Y/%m/%d")
 class(PM25.2019$Date)
 
 PM25.2019.processed <- 
@@ -148,19 +148,19 @@ EPAair.7 <- rbind(Ozone.2018.processed, Ozone.2019.processed, PM25.2018.processe
 EPAair.8.summaries <- 
   EPAair.7 %>%
   filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>%
-  group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
-  summarise(meanAQI = mean(DAILY_AQI_VALUE), meanlat = mean(SITE_LATITUDE), meanlong = mean(SITE_LONGITUDE)) %>%
-  mutate(month = month(Date), year = year(Date)) 
-  
-  
+ group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
+# summarise(meanAQI = mean(DAILY_AQI_VALUE), meanlat = mean(SITE_LATITUDE), meanlong = mean(SITE_LONGITUDE)) %>%
+ mutate(month = month(Date), year = year(Date)) 
 
 #9
-EPAair.8.summaries.spread <- pivot_wider(EPAair.8.summaries, names_from = AQS_PARAMETER_DESC, values_from = DAILY_AQI_VALUE)
+#EPAair.8.summaries.spread <- pivot_wider(EPAair.8.summaries, names_from = AQS_PARAMETER_DESC, values_from = DAILY_AQI_VALUE)
 
 #10
+#dim(EPAair.8.summaries.spread)
 
 #11
-
+#write.csv(EPAair.8.summaries.spread, row.names = FALSE, 
+        #  file ="../Data/Raw/EPAair_O3_PM25_NC1718_Processed.csv")
 ```
 
 
@@ -171,13 +171,17 @@ EPAair.8.summaries.spread <- pivot_wider(EPAair.8.summaries, names_from = AQS_PA
 
 ```{r}
 #12a
-
+EPAair.Ozone.Summaries <- 
+  EPAair.8.summaries.spread %>%
+  group_by(Site.Name, month, year) %>%
+  summarise(meanAQI = mean(DAILY_AQI_VALUE)) %>%
+  drop_na(month, year)
 #12b
 
 #13
-
+dim(EPAair.Ozone.Summaries)
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: drop_na is a part of the tidyverse package that we installed at the beginning so we should feel more inclined to use a funciton of the packages we used for previous problems. Additionally, na.omit requires you create a new dataset to do so, but drop_na removes rows of NA from an existing dataset.
