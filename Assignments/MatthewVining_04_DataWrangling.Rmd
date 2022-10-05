@@ -72,6 +72,27 @@ dim(PM25.2019)
 
 ```{r}
 #3
+Ozone.2018$Date <- as.Date(Ozone.2018$Date, format = "%Y-%m-%d")
+Ozone.2018.Process <- 
+  Ozone.2018 %>%
+  select(Date, DAILY_AQI_VALUE:Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE) %>%
+
+Ozone.2019$Date <- as.Date(Ozone.2019$Date, format = "%Y-%m-%d")
+Ozone.2019.Process <- 
+  Ozone.2019 %>%
+  select(Date, DAILY_AQI_VALUE:Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE) 
+
+PM25.2018$Date <- as.Date(PM25.2018$Date, format = "%Y-%m-%d")
+Ozone.2019.Process <- 
+  PM25.2018 %>%
+  select(Date, DAILY_AQI_VALUE:Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE) %>%
+  mutate(AQS_PARAMETER_DESC = "PM2.5")
+
+PM25.2019$Date <- as.Date(PM25.2019$Date, format = "%Y-%m-%d")
+PM25.2019.Process <- 
+  PM25.2019 %>%
+  select(Date, DAILY_AQI_VALUE:Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE) %>%
+  mutate(AQS_PARAMETER_DESC = "PM2.5")
 
 #4
 
