@@ -33,9 +33,9 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 
 ```{r, message = FALSE}
 getwd()
-#install.packages(tidyverse)
+install.packages(tidyverse)
 library(tidyverse)
-#install.packages(lubridate)
+install.packages(lubridate)
 library(lubridate)
 
 #1
