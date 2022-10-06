@@ -10,7 +10,7 @@ geometry: margin=2.54cm
 #For it to work, the "formatR" package needs to be installed
 
 install.packages('formatR')
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=45), tidy=TRUE)
 ```
 
 ## OVERVIEW
@@ -37,6 +37,8 @@ install.packages(tidyverse)
 library(tidyverse)
 install.packages(lubridate)
 library(lubridate)
+install.packages(dplyr)
+library(dplyr)
 
 #1
 
@@ -74,7 +76,7 @@ dim(PM25.2019)
 #3-6
 # Ozone.2018
 class(Ozone.2018$Date)
-Ozone.2018$Date <- as.Date(Ozone.2018$Date, format = "%Y/%m/%d")
+Ozone.2018$Date <- as.Date(Ozone.2018$Date, format = "%m/%d/%Y")
 class(Ozone.2018$Date)
 
 Ozone.2018.processed <- 
@@ -86,7 +88,7 @@ Ozone.2018.processed <-
   
 #Ozone.2019
 class(Ozone.2019$Date)
-#Ozone.2019$Date <- as.Date(Ozone.2019$Date, format = "%Y/%m/%d")
+Ozone.2019$Date <- as.Date(Ozone.2019$Date, format = "%m/%d/%Y")
 class(Ozone.2019$Date)
 
 Ozone.2019.processed <- 
@@ -98,13 +100,14 @@ Ozone.2019.processed <-
 
 #PM2.5.2018
 class(PM25.2018$Date)
-#PM25.2018$Date <- as.Date(PM25.2018$Date, format = "%Y/%m/%d")
+PM25.2018$Date <- as.Date(PM25.2018$Date, format = "%m/%d/%Y")
 class(PM25.2018$Date)
 
 PM25.2018.processed <- 
   PM25.2018 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
-  mutate(AQS_PARAMETER_DESC = "PM2.5")
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+
+PM25.2018.processed$AQS_PARAMETER_DESC <- "PM2.5"
 
 write.csv(PM25.2018.processed, row.names = FALSE, 
           file ="../Data/Raw/EPAair_PM25_NC2018_processed.csv")
@@ -112,13 +115,14 @@ write.csv(PM25.2018.processed, row.names = FALSE,
 
 #PM2.5.2019
 class(PM25.2019$Date)
-#PM25.2019$Date <- as.Date(PM25.2019$Date, format = "%Y/%m/%d")
+PM25.2019$Date <- as.Date(PM25.2019$Date, format = "%m/%d/%Y")
 class(PM25.2019$Date)
 
 PM25.2019.processed <- 
   PM25.2019 %>%
-  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) %>%
-  mutate(AQS_PARAMETER_DESC = "PM2.5")
+  select(Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE) 
+
+PM25.2019.processed$AQS_PARAMETER_DESC <- "PM2.5"
 
 write.csv(PM25.2019.processed, row.names = FALSE, 
           file ="../Data/Raw/EPAair_PM25_NC2019_processed.csv")
@@ -148,9 +152,9 @@ EPAair.7 <- rbind(Ozone.2018.processed, Ozone.2019.processed, PM25.2018.processe
 EPAair.8.summaries <- 
   EPAair.7 %>%
   filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory" | Site.Name == "Leggett" | Site.Name == "Hattie Avenue" | Site.Name == "Clemmons Middle" | Site.Name == "Mendenhall School" | Site.Name == "Frying Pan Mountain" | Site.Name == "West Johnston Co." | Site.Name == "Garinger High School" | Site.Name == "Castle Hayne" | Site.Name == "Pitt Agri. Center" | Site.Name == "Bryson City" | Site.Name == "Millbrook School") %>%
- group_by(Date, Site.Name, AQS_PARAMETER_DESC, COUNTY) %>%
- summarise(meanAQI = mean(DAILY_AQI_VALUE), meanlat = mean(SITE_LATITUDE), meanlong = mean(SITE_LONGITUDE)) %>%
- mutate(month = month(Date), year = year(Date)) 
+  group_by(Date, Site.Name, COUNTY, AQS_PARAMETER_DESC) %>%
+  summarise(meanAQI = mean(DAILY_AQI_VALUE), meanlat = mean(SITE_LATITUDE), meanlong = mean(SITE_LONGITUDE)) %>%
+  mutate(month = month(Date), year = year(Date)) 
 
 #9
 EPAair.8.summaries.spread <- pivot_wider(EPAair.8.summaries, names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
@@ -170,14 +174,12 @@ write.csv(EPAair.8.summaries.spread, row.names = FALSE,
 13. Call up the dimensions of the summary dataset.
 
 ```{r}
-#12a
+#12
 EPAair.Ozone.Summaries <- 
-  EPAair.7 %>%
-  mutate(month = month(Date), year = year(Date)) 
+  EPAair.8.summaries.spread %>%
   group_by(month, year, Site.Name) %>%
-  summarise(meanAQI = mean(DAILY_AQI_VALUE)) %>%
+  summarise(meanAQI.Ozone = mean(Ozone), meanAQI.PM25 = mean(PM2.5)) %>%
   drop_na(month, year)
-#12b
 
 #13
 dim(EPAair.Ozone.Summaries)
