@@ -33,11 +33,11 @@ The completed exercise is due on Friday, Oct7th @ 5:00pm.
 
 ```{r, message = FALSE}
 getwd()
-install.packages(tidyverse)
+#install.packages(tidyverse)
 library(tidyverse)
-install.packages(lubridate)
+#install.packages(lubridate)
 library(lubridate)
-install.packages(dplyr)
+#install.packages(dplyr)
 library(dplyr)
 
 #1
@@ -187,4 +187,4 @@ dim(EPAair.Ozone.Summaries)
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: drop_na is a part of the tidyverse package that we installed at the beginning so we should feel more inclined to use a funciton of the packages we used for previous problems. Additionally, na.omit requires you create a new dataset to do so, but drop_na removes rows of NA from an existing dataset.
+> Answer: drop_na is a part of the tidyverse package that we installed at the beginning so we should feel more inclined to use a funciton of the packages we used for previous problems. Additionally, na.omit opts into creating a new dataset to do so, but drop_na removes rows of NA from an existing dataset.
