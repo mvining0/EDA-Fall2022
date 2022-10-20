@@ -42,7 +42,7 @@ the processed data file for the Niwot Ridge litter dataset (use the
 #1 
 library(tidyverse)
 library(lubridate)
-install.packages('cowplot')
+#install.packages('cowplot')
 library(cowplot)
 
 Nutrients <- read.csv("./Data/Processed/NTL-LTER_Lake_Chemistry_Nutrients_PeterPaul_Processed.csv", stringsAsFactors = TRUE)
@@ -81,8 +81,13 @@ limits using `xlim()` and/or `ylim()`).
 ```{r}
 #4
 Plot_P4 <-
-  ggplot(Nutrients, aes(x= po4, y=tp_ug))+
-  geom_point(aes(color = lakename), size = 0.5) + scale_color_viridis(option = "magma", direction = -1) +
+  ggplot(Nutrients, aes(x= po4, y=tp_ug, color=lakename)) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  ylim(0,150)+
+  xlim(0,50)
+print(Plot_P4)
+
 ```
 
 
@@ -97,6 +102,25 @@ see <https://r-lang.com/month-abb-in-r-with-example>
 ```{r}
 #5
 
+factor(Nutrients$month, levels=c(1:12))
+
+Plot_P5.temp <-
+  ggplot(Nutrients, aes(x = month, y = temperature_C)) +
+  geom_boxplot(aes(color = lakename)) 
+print(Plot_P5.temp)
+
+Plot_P5.tp <-
+  ggplot(Nutrients, aes(x = month, y = tp_ug)) +
+  geom_boxplot(aes(color = lakename)) 
+print(Plot_P5.tp)
+
+Plot_P5.tn <-
+  ggplot(Nutrients, aes(x = month, y = tn_ug)) +
+  geom_boxplot(aes(color = lakename)) 
+print(Plot_P5.tn)
+
+month.abb[Nutrients$month]
+plot_grid(Plot_P5.temp, Plot_P5.tn, Plot_P5.tp, align = 'hv', axis = 'b', common.legend = TRUE) + scale_x_discrete(month, drop=FALSE)
 ```
 
 Question: What do you observe about the variables of interest over seasons 
@@ -114,9 +138,19 @@ three facets rather than separated by color.
 
 ```{r}
 #6
+Plot.P6 <- 
+  ggplot(subset(Chemistry_physics, functionalGroup = "Needles"), 
+         aes(x = collectDate, y = dryMass, color = nlcdClass)) +
+  geom_point()
+print(Plot.P6)
 
 #7
-
+Plot.P7 <- 
+  ggplot(subset(Chemistry_physics, functionalGroup = "Needles"), 
+         aes(x = collectDate, y = dryMass)) + 
+  geom_point() +
+  facet_wrap(vars(nlcdClass), nrow = 3)
+print(Plot.P7)
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
