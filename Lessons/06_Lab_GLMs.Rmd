@@ -108,15 +108,36 @@ What other variables can we add to improve model?
 
 #Exercise 4: Build correlation plots and identify more possible explanatory variables to add to the regression.
 
+#install.packages("corrplot")
+library(corrplot)
+P4.Plot <- 
+  EPAair %>%
+  select(meanLat:Ozone) %>%
+  na.omit()
 
-
+P4Corr <- cor(P4.Plot)
+corrplot(P4Corr, method = "ellipse")
+corrplot.mixed(P4Corr, upper = "ellipse")
+#possible variables could be Month, Year, meanLat, meanLng, or even COUNTY; strongest are Month and mean Lng
 
 #Exercise 5: Choose a model by AIC in a Stepwise Algorithm. Do the results from AIC match the variables you selected on Exercise 5?
+P5AIC <- lm(data = EPAair, PM2.5 ~ Ozone + Month + 
+               meanLat + meanLng)
+summary(P5AIC)
 
+#Choose a model by AIC in a Stepwise Algorithm
+step(P5AIC) #keep running steps and editing linear model until you get lowest score
+P5model <- lm(data = EPAair, PM2.5 ~ Ozone + Month + 
+              meanLat + meanLng)
+summary(P5model)
 
 
 
 #Exercise 6: Run another regression using the variables selected on Exercise 6. Compare r-squared value with the one from Exercise 5. 
+P6.regression <- lm(data = EPAair, PM2.5 ~ Ozone + Month + 
+            meanLat + meanLng)
+summary(P6.regression)
+# R squared = 0.1926 which improved form 0.14
 
 ```
 
@@ -156,4 +177,17 @@ print(Litter.Totals.plot)
 
 ```{r}
 #Exercise 7: Improve the plot```
+Litter.Totals <- cbind(Litter.Totals, groups=treatgroups)
+Litter.Totals$plotID <-
+  reorder(Litter.Totals$plotID, Litter.Totals$dryMass, FUN=mean)
 
+
+Litter.Totals.plot2 <- ggplot(Litter.Totals, aes(x = plotID, y = dryMass)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  stat_summary(geom = "text", fun = max, vjust = -1, size = 3.5,
+               label = c("abc", "ab", "abcd", "bcd", "bcd", "a", 
+                         "d", "abcd", "cd", "d", "abcd", "abcd")) +
+  labs(x = "Plot ID", y = "Dry Mass (g)") +
+  ylim(0, 85)
+print(Litter.Totals.plot2)
