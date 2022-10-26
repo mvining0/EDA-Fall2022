@@ -161,7 +161,7 @@ summary(Lakes.regression)
 
 13. Is there a significant difference in mean temperature among the lakes? Report your findings. 
 
-> Answer: 
+> Answer: Yes, there appears to be evidence indicating signficant differences by lake. Each lake has a signficiant p-value associated with it, indicating the model is a good predictor with it included as an explnatory variable. Based on the estimates, lakes such as West Long Lake, Tuesday Lake, Hummingbird Lake, and East Long Lake have the coldest temperatures in the group. Lakes such as Crampton Lake, Paul Lake, and Ward Lake have the warmest temperatures of the group.
 
 
 
@@ -169,7 +169,14 @@ summary(Lakes.regression)
 
 ```{r scatterplot.2}
 #14.
-
+Plot_P14 <-
+  ggplot(wrangle.P4, aes(x= depth, y=temperature_C, color=lakename)) +
+  geom_point(alpha =0.5) +
+  geom_smooth(method=lm, col="black", se = FALSE) +
+  ylim(0,35)+
+  ylab("Temperature (C)") +
+  xlab("Depth (m)")
+print(Plot_P14)
 
 ```
 
@@ -177,7 +184,7 @@ summary(Lakes.regression)
 
 ```{r tukey.test}
 #15
-
+TukeyHSD(Lakes.anova)
 
 ```
 
