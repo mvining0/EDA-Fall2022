@@ -202,11 +202,15 @@ Specific tests for monotonic trend analysis are listed below, with assumptions a
 * **linear regression**: no seasonality, fits the assumptions of a parametric test. Function: `lm`
 * **Mann-Kendall**: no seasonality, non-parametric, missing data allowed. Function: `MannKendall()` (package: Kendall)
 * **Seasonal Mann-Kendall**: seasonality, non-parametric `SeasonalMannKendall` (package: Kendall)
-* **Spearman Rho**: no seasonality, non-parametric, missing data allowed. Function: `cor.test(method="spearman")` (package: stats)
+* **Spearman Rho**: no seasonality, non-parametric, missing data allowed. Function: `cor.test(method="spearman")` (package: stats). Can detect non linear trends.
 
 Specific test for stochastic trend analysis:
 
-* **Augmented Dickey Fuller**: no seasonality, non-parametric, missing data not allowed. Function: `adf.test()` (package: tseries)
+* **Augmented Dickey Fuller**: no seasonality, non-parametric, missing data not allowed. Function: `adf.test()` (package: tseries). Can also detect stochastic trends, while also check monotonic. 
+
+
+
+If ADF is positive, dont run man kendall test, just say stochastic trend.
 
 
 #### Example: monotonic trend analysis
