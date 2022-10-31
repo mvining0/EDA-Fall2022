@@ -12,7 +12,7 @@ editor_options:
 #For it to work, the "formatR" package needs to be installed
 
 #install.packages('formatR')
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 ```
 
 ## OVERVIEW
@@ -32,7 +32,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on general
 
 2. Build a ggplot theme and set it as your default theme.
 
-```{r setup}
+```{r}
 #1
 getwd()
 library(tidyverse)
@@ -48,7 +48,7 @@ class(chemistry_physics$sampledate)
 #2
 
 # Set Standard Theme
-mytheme <- theme_classic(base_size = 14) +
+mytheme <- theme_classic(base_size = 10) +
   theme(axis.text = element_text(color = "black"), 
         legend.position = "top")
 theme_set(mytheme)
@@ -95,7 +95,7 @@ print(plot.5)
 
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
-> Answer: The figure suggests that as depth of the lakes increase, the temperature decreases, forming an inverse relationship. Looking at the distribution of points, it appears to start off linear, but possibly turns quadratic or to a higher degree of just a linear relationship after a depth of about 5m.
+> Answer: The figure suggests that as depth of the lakes increase, the temperature decreases, forming an inverse relationship. Looking at the distribution of points, it appears to start off linear, but possibly turns quadratic or to a higher degree than just a linear relationship after a depth of about 5m.
 
 
 7. Perform a linear regression to test the relationship and display the results
@@ -185,25 +185,29 @@ print(Plot_P14)
 ```{r tukey.test}
 #15
 TukeyHSD(Lakes.anova)
-
 ```
 
 16.From the findings above, which lakes have the same mean temperature, statistically speaking, as Peter Lake? Does any lake have a mean temperature that is statistically distinct from all the other lakes?
 
->Answer:
+>Answer:Both Paul Lake and Ward Lake have the same mean temperatures as Peter Lake, statistically speaking. We know this because of the high p-values that indicate no significance in differences in means at a 95% confidence level. Based on the significance of the p-values, it appears not one lake is statistically distinct from all other lakes in terms of mean temperature. Each lake has atleast one other lake in common where their mean temperatures are not statistically distint from one another.
 
  
 
 17. If we were just looking at Peter Lake and Paul Lake. What's another test we might explore to see whether they have distinct mean temperatures? 
 
->Answer: 
+>Answer: If just looking at one categorical variable with two categories, we could perform a t-test to understand whether they have distinct mean temperatures.
 
 
 
 18. Wrangle the July data to include only records for Crampton Lake and Ward Lake. Run the two-sample T-test on these data to determine whether their July temperature are same or different. What does the test say? Are the mean temperatures for the lakes equal? Does that match you answer for part 16?
 
 ```{r t.test}
+wrangle.P18 <-
+  wrangle.P4 %>%
+  filter(lakename == "Crampton Lake" | lakename == "Ward Lake")
 
+P18.ttest <- t.test(wrangle.P18$temperature_C ~ wrangle.P18$lakename)
+P18.ttest
 ```
 
->Answer: 
+>Answer: The results of our two-sample T-test indicate that the mean temperatures for the lake are not statistically different. We know this becuase the p-value is greater than 0.05 for a 95% confidence interval an the t-value is within the confidence interval range. This outcome matches the conclusion from part 15-17 where Crampton and Ward Lakes had no statistical significance to show any difference in mean temperatures.
