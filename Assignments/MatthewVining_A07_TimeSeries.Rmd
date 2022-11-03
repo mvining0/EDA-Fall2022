@@ -98,9 +98,12 @@ wrangle.4 <-
   select(Date,Daily.Max.8.hour.Ozone.Concentration,DAILY_AQI_VALUE)
 
 # 5
-Days <- as.data.frame(wrangle.4$Date, seq('2010-01-01':'2019-12-31'))
-# 6
+Days <- as.data.frame(seq.Date(from=as.Date("2010-01-01"), to=as.Date("2019-12-31"), by=1))
+names(Days) <- c("Date")
 
+# 6
+Garinger_Ozone <-
+  left_join(Days, wrangle.4, by = c ("Date") )
 
 ```
 
@@ -110,7 +113,13 @@ Days <- as.data.frame(wrangle.4$Date, seq('2010-01-01':'2019-12-31'))
 
 ```{r}
 #7
-
+plot.7 <-
+  ggplot(Garinger_Ozone, aes(x = Date, y = Daily.Max.8.hour.Ozone.Concentration)) +
+  geom_line() +
+  geom_smooth(method = 'lm') +
+  xlab("Date") +
+  ylab("Concentration (ppm)")
+print(plot.7)
 ```
 
 >Answer:
