@@ -91,7 +91,7 @@ GaringerOzone <- rbind(ozone_2010, ozone_2011, ozone_2012, ozone_2013, ozone_201
 
 ```{r}
 # 3
-GaringerOzone$Date <- as.Date(GaringerOzone$Date, format = "%m/%d/%y")
+GaringerOzone$Date <- as.Date(GaringerOzone$Date, format = "%m/%d/%Y")
 # 4
 wrangle.4 <-
   GaringerOzone %>%
@@ -104,7 +104,7 @@ names(Days) <- c("Date")
 # 6
 Garinger_Ozone <-
   left_join(Days, wrangle.4, by = c ("Date") )
-
+summary(Garinger_Ozone)
 ```
 
 ## Visualize
@@ -122,7 +122,7 @@ plot.7 <-
 print(plot.7)
 ```
 
->Answer:
+>Answer:Based on the visualization of data from the plot and blue linear trend line, it appears that there is a negative linear relationship associated with date and ozone concentration with a small rate of change over time.
 
 ## Time Series Analysis
 
@@ -132,17 +132,25 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #8
+Ozone.inter <-
+  Garinger_Ozone %>%
+  mutate(Daily.Max.8.hour.Ozone.Concentration = zoo::na.approx(Daily.Max.8.hour.Ozone.Concentration))
 
+summary(Ozone.inter)
 ```
 
-> Answer: 
+> Answer: Both piece wise and spline interprolations look at connecting dots between existing data where data is missing beyond a linear interprolation, accounting for functions such as exponential or quadratic. Because the plotted relationship appears to have a linear trend, we opt for the linear interprolation to fill in the missing data. If visualization of data looked to have a non-linear trend, then it would make sense to fill in the missing data in a non-linear format.
 
 
 9. Create a new data frame called `GaringerOzone.monthly` that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
 
 ```{r}
 #9
-
+GaringerOzone.monthly <-
+  Ozone.inter %>%
+  mutate(month_year = floor_date(Date, "month")) %>%
+  group_by(month_year) %>%
+  summarise(mean.conc = mean(Daily.Max.8.hour.Ozone.Concentration))
 ```
 
 
@@ -150,7 +158,11 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #10
-
+GaringerOzone.daily.ts <- ts(Ozone.inter$Daily.Max.8.hour.Ozone.Concentration, start=c(2010-01-01), frequency = 365)
+  
+GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$mean.conc,
+                   start=c(2010-01-01),
+                   frequency=12)
 ```
 
 
@@ -158,7 +170,11 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #11
+daily_decomp <- stl(GaringerOzone.daily.ts, s.window = "periodic")
+plot(daily_decomp)
 
+monthly_decomp <- stl(GaringerOzone.monthly.ts, s.window = "periodic")
+plot(monthly_decomp)
 
 ```
 
@@ -167,26 +183,31 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #12
-
-
+trend_12 <- Kendall::SeasonalMannKendall(GaringerOzone.monthly.ts)
+summary(trend_12)
 
 ```
 
-> Answer: 
+> Answer: We want to use the seasonal Mann-Kendall case for this series because our plotted decomposition shows strong signs of a seasonal trend in ozone concentrations over time. 
 
 13. Create a plot depicting mean monthly ozone concentrations over time, with both a geom_point and a geom_line layer. Edit your axis labels accordingly.
 
 ```{r}
 # 13
-
-
-
+plot.13 <-
+  ggplot(GaringerOzone.monthly, aes(x = month_year, y = mean.conc)) +
+  geom_line() +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  xlab("Date (By Month)") +
+  ylab("Concentration (ppm)")
+print(plot.13)
 
 ```
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: 
+> Answer: Based on our results, it appears that ozone concentration has in fact changed in teh 2010s at this station. One fact is that our Mann Kendall test shows a negative montomic trend of -77 and has a signfiicant p-velu of 0.046 for a 95% confidence interval. These statistics indidcate significance against a null hypothesis that there is no change. Additionally, the graph shows a clear decreasing linear trend in our data to accompany our statistical output.
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -194,14 +215,16 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #15
-
-
+series_Components <- as.data.frame(monthly_decomp$time.series[,2:3])
 
 #16
-
-
-
+series.ts <- ts(series_Components$trend,
+                   start=c(2010-01-01),
+                   frequency=12)
+trend_16 <- Kendall::SeasonalMannKendall(series.ts)
+summary(trend_16)
+summary(trend_12)
 
 ```
 
-> Answer: 
+> Answer: After removing the seasonal components in out time series, the Mann Kendall test shows that the non-seasonal series has a lower p-value than the one that contained seasonal components. This indicates that when removing seasonal components, we have a stronger signficance associated with the relationship between monthly ozone concentration over time (linear). We also see that the non-seasonal test has a higher score, indicating a stronger monotomic downward trend. Controlling for seasonal variation in ozone concentration allowed the statistical test to provide a stronger reasonoing for rejecting an null hypothesis that there is no change in the 2010s.
