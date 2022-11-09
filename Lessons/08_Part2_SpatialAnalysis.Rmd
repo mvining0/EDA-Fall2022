@@ -49,6 +49,7 @@ getwd()
 library(tidyverse)
 library(lubridate)
 library(sf)
+install.packages('mapview')
 library(mapview)
 library(RColorBrewer)
 ```
@@ -298,6 +299,7 @@ huc2_sf <- huc8_sf %>%
     acres = sum(ACRES),
     sq_miles = sum(SQ_MILES)
   )
+#group by dissolves by features
 
 #Map the data
 ggplot() + geom_sf(data=huc2_sf,aes(fill=acres))

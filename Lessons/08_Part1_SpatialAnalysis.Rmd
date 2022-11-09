@@ -41,6 +41,8 @@ library(mapview)
 
 #Disable on-the-fly projections
 sf::sf_use_s2(FALSE)
+
+## dplyr::summarise example if wanting to use a specific package and command associated with it
 ```
 
 ---
