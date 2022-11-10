@@ -1,11 +1,13 @@
 ---
-title: "Assignment 8: Spatial Analysis in R"
+title: 'Assignment 8: Spatial Analysis in R'
 author: "Matthew Vining"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
-  markdown: 
+  markdown:
     wrap: 72
 ---
 
@@ -91,7 +93,7 @@ colnames(gage_loc)
 
 9. What columns in the dataset contain the x and y coordinate values, respectively?  
 > ANSWER: The dec_lat_va column is the latitude column which is our y coordinate values. The dec_long_va is our longitudinal values which are our x coordinates.
-> 
+
 
 
 ### Convert the dataframe to a spatial features ("sf") dataframe
@@ -113,7 +115,7 @@ colnames(gage_loc_sf)
 
 12. What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: the "dec_long_va" and "dec_lat_va" columns dissapeared and appear to have merged into the column titled "geometry". 
+>ANSWER: the "dec_long_va" and "dec_lat_va" columns dissapeared and appear to have merged into the new column titled "geometry". 
 >
 
 
@@ -178,8 +180,7 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 
 ggplot() +
   geom_sf(data = NE_counties_sf,color='red') + 
-  geom_sf(data = gage_sf_join,aes(fill = gage_ht),alpha=0.3) +
-  scale_fill_gradient2(low='orange',high='purple',midpoint = 20) +
+  geom_sf(data = gage_sf_join,aes(color = gage_ht),alpha=0.3) +
   labs(title = "NWIS Gage Locations in Nebraska", subtitle = "Matthew Vining")
 
 
