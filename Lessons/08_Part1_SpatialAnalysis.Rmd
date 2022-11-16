@@ -9,6 +9,8 @@ editor_options:
 
 # 1. INTRODUCTION
 
+- 
+
 ## 1.1 Lesson Objectives
 -   Discuss the importance of location in environmental data analysis
 -   Examine how spatial features are stored in R: "Simple Features" and the `sf` package
