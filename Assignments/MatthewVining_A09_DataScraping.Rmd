@@ -137,15 +137,15 @@ ggplot(df_withdrawals,aes(x=Date,y=max.withdrawals.mgd)) +
 #6.
 the_base_url <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid='
 pswid <- '03-32-010'
-the_year <- 2021
-the_scrape_url <- paste0(the_base_url, pswid, '&year=', Year)
-print(the_scrape_url)
+Year <- 2021
+DEQwebpage <- paste0(the_base_url, pswid, '&year=', Year)
+print(DEQwebpage)
 
 scrape.it <- function(Year, pswid){
   
   #Retrieve the website contents 
-  the_website <- read_html(paste0('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=', pswid, '&year=', Year))
-  
+  DEQwebpage <- read_html(paste0('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=', pswid, '&year=', Year))
+ 
   #Set the elements and scrape
   
   water.system.name <- DEQwebpage %>% 
@@ -173,11 +173,12 @@ scrape.it <- function(Year, pswid){
                              pswid = pswid,
                              ownership = ownership,
                              max.withdrawals.mgd = max.withdrawals.mgd,
-                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"))
+                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+                            "Year" = rep(Year,1))
 
 df_withdrawals <- df_withdrawals %>% 
-  arrange(df_withdrawals, Month) %>%
-  mutate(Date = my(paste(Month,"-",Year)))
+  mutate(Date = my(paste(Month,"-",Year))) %>%
+  arrange(Date) 
   
   #Pause for a moment - scraping etiquette
   #Sys.sleep(1) #uncomment this if you are doing bulk scraping!
@@ -193,10 +194,18 @@ df_withdrawals <- df_withdrawals %>%
 
 ```{r fetch.and.plot.Durham.2015.data}
 #7
-pswid <- '03-32-010'
-Year <- 2015
-extract.df <- scrape.it(Year,pswid)
+
+extract.df <- scrape.it(Year=2015,pswid='03-32-010')
 extract.df
+
+
+ggplot(extract.df,aes(x=Date,y=max.withdrawals.mgd)) + 
+  geom_line(aes(group=1)) +
+  labs(title = paste("2015 Maximum Daily Water Withdrawls"),
+       subtitle = "Matthew Vining",
+       y="Withdrawal (mgd)",
+       x="Date")
+
 
 ```
 
@@ -204,10 +213,26 @@ extract.df
 
 ```{r fetch.and.plot.Asheville.2015.data}
 #8
-extract.df2 <- scrape.it(2015,'01-11-010')
+extract.df2 <- scrape.it(Year=2015,pswid='01-11-010')
 extract.df2
 
-rbind(extract.df, extract.df2)
+total_extract <- rbind(extract.df, extract.df2)
+
+ggplot(extract.df2,aes(x=Date,y=max.withdrawals.mgd)) + 
+  geom_line(aes(group=1)) +
+  labs(title = paste("2015 Maximum Daily Water Withdrawls"),
+       subtitle = "Matthew Vining",
+       y="Withdrawal (mgd)",
+       x="Date")
+
+ggplot(total_extract,aes(x=Date)) + 
+  geom_line(aes(y=max.withdrawals.mgd, color=water.system.name)) +
+  geom_point(aes(y=max.withdrawals.mgd, color=water.system.name)) +
+  labs(title = paste("2015 Maximum Daily Water Withdrawls for Asheville and Durham"),
+       subtitle = "Matthew Vining",
+       y="Withdrawal (mgd)",
+       x="Date")
+
 
 ```
 
