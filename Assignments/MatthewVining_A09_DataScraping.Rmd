@@ -112,7 +112,8 @@ df_withdrawals <- data.frame(water.system.name = water.system.name,
                              pswid = pswid,
                              ownership = ownership,
                              max.withdrawals.mgd = max.withdrawals.mgd,
-                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", 
+                                        "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
                             "Year" = rep(2021,1))
 
 df_withdrawals <- df_withdrawals %>% 
@@ -144,7 +145,8 @@ print(DEQwebpage)
 scrape.it <- function(Year, pswid){
   
   #Retrieve the website contents 
-  DEQwebpage <- read_html(paste0('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=', pswid, '&year=', Year))
+  DEQwebpage <- read_html(paste0('https://www.ncwater.org/WUDC/app/LWSP/report.php?pwsid=',
+                                 pswid, '&year=', Year))
  
   #Set the elements and scrape
   
@@ -173,7 +175,8 @@ scrape.it <- function(Year, pswid){
                              pswid = pswid,
                              ownership = ownership,
                              max.withdrawals.mgd = max.withdrawals.mgd,
-                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
+                            "Month" = c("Jan", "May", "Sep", "Feb", "Jun", 
+                                        "Oct", "Mar", "Jul", "Nov", "Apr", "Aug", "Dec"),
                             "Year" = rep(Year,1))
 
 df_withdrawals <- df_withdrawals %>% 
@@ -217,13 +220,7 @@ extract.df2 <- scrape.it(Year=2015,pswid='01-11-010')
 extract.df2
 
 total_extract <- rbind(extract.df, extract.df2)
-
-ggplot(extract.df2,aes(x=Date,y=max.withdrawals.mgd)) + 
-  geom_line(aes(group=1)) +
-  labs(title = paste("2015 Maximum Daily Water Withdrawls"),
-       subtitle = "Matthew Vining",
-       y="Withdrawal (mgd)",
-       x="Date")
+total_extract$max.withdrawals.mgd <- as.numeric(total_extract$max.withdrawals.mgd)
 
 ggplot(total_extract,aes(x=Date)) + 
   geom_line(aes(y=max.withdrawals.mgd, color=water.system.name)) +
@@ -243,8 +240,22 @@ ggplot(total_extract,aes(x=Date)) +
 
 ```{r fetch.and.plot.Asheville.multiyear.data}
 #9
+Year = rep(2010:2019)
+pswid = '01-11-010'
 
+map_9 <- map(Year,scrape.it,pswid=pswid)
+single_map_9 <- bind_rows(map_9)
+
+single_map_9$max.withdrawals.mgd <- as.numeric(single_map_9$max.withdrawals.mgd)
+
+ggplot(single_map_9,aes(x=Date,y=max.withdrawals.mgd)) + 
+  geom_line() + 
+  geom_smooth(method="loess",se=FALSE) +
+  labs(title = paste("Asheville's MGD Withdrawls Over Time"),
+       subtitle = "Matthew Vining",
+       y="Withdrawal (mgd)",
+       x="Date")
 
 ```
 
->Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
+>Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time? Yes, throughout time, water usage has had an increasing trend upwards, indicating greater use over time. 
